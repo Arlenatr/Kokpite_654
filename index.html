@@ -2,7 +2,7 @@
 <html lang="tr">
 <head>
   <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, interactive-widget=resizes-content" />
   <meta name="theme-color" content="#0e1016" />
   <meta name="mobile-web-app-capable" content="yes" />
   <meta name="apple-mobile-web-app-capable" content="yes" />
@@ -420,7 +420,7 @@
       background: #171a24;
       border-top: 1px solid rgba(255, 255, 255, 0.1);
       border-radius: 26px 26px 0 0;
-      padding: 20px 20px 30px;
+      padding: 20px 20px calc(76px + env(safe-area-inset-bottom, 0px));
       animation: slideUp 0.25s ease-out;
       max-height: 88vh;
       overflow-y: auto;
@@ -681,11 +681,11 @@
       <input type="hidden" id="editGoalId" />
       <div class="form-group">
         <label class="form-label">Hedef Adı</label>
-        <input type="text" class="form-input" id="goalNameInput" placeholder="Örn: 125cc Motor, Yeni Ekipman..." />
+        <input type="text" class="form-input" id="goalNameInput" name="x_goal_title_99" autocomplete="one-time-code" autocorrect="off" autocapitalize="sentences" spellcheck="false" data-lpignore="true" data-form-type="other" placeholder="Örn: 125cc Motor, Yeni Ekipman..." />
       </div>
       <div class="form-group">
         <label class="form-label">Hedef Tutar (₺)</label>
-        <input type="number" inputmode="decimal" class="form-input" id="goalTargetInput" placeholder="10000" />
+        <input type="number" inputmode="decimal" class="form-input" id="goalTargetInput" name="x_goal_val_99" autocomplete="one-time-code" autocorrect="off" spellcheck="false" data-lpignore="true" data-form-type="other" placeholder="10000" />
       </div>
       <div class="form-group">
         <label class="form-label">Hedef Fotoğrafı</label>
@@ -723,11 +723,11 @@
 
       <div class="form-group">
         <label class="form-label">Tutar (₺)</label>
-        <input type="number" inputmode="decimal" class="form-input" id="txAmountInput" placeholder="0" style="font-size:22px; font-weight:700;" />
+        <input type="number" inputmode="decimal" class="form-input" id="txAmountInput" name="x_tx_val_99" autocomplete="one-time-code" autocorrect="off" spellcheck="false" data-lpignore="true" data-form-type="other" placeholder="0" style="font-size:22px; font-weight:700;" />
       </div>
       <div class="form-group">
         <label class="form-label">Not (İsteğe Bağlı)</label>
-        <input type="text" class="form-input" id="txNoteInput" placeholder="Örn: Haftalık aktarım, ek gelir..." />
+        <input type="text" class="form-input" id="txNoteInput" name="x_tx_memo_99" autocomplete="one-time-code" autocorrect="off" spellcheck="false" data-lpignore="true" data-form-type="other" placeholder="Örn: Haftalık aktarım, ek gelir..." />
       </div>
       <button class="btn-primary" id="txSubmitBtn" onclick="submitTransaction()">Onayla</button>
     </div>
@@ -765,7 +765,6 @@
   </div>
 
   <script>
-    // Service Worker Kaydı (Uygulama olarak yüklenebilirlik + Offline çalışma)
     if ("serviceWorker" in navigator) {
       window.addEventListener("load", () => {
         navigator.serviceWorker.register("./sw.js").catch(() => {});
@@ -777,7 +776,6 @@
     let db;
     let selectedPhotoBase64 = "";
 
-    // IndexedDB Başlatma
     function initDB() {
       return new Promise((resolve, reject) => {
         const req = indexedDB.open(DB_NAME, DB_VERSION);
@@ -826,7 +824,6 @@
       });
     }
 
-    // Para Formatı
     function formatTL(num) {
       return new Intl.NumberFormat("tr-TR", {
         minimumFractionDigits: num % 1 === 0 ? 0 : 2,
@@ -834,7 +831,6 @@
       }).format(num) + " ₺";
     }
 
-    // Fotoğraf Sıkıştırma (Hafıza dostu)
     function handlePhotoSelect(event) {
       const file = event.target.files[0];
       if (!file) return;
@@ -866,7 +862,6 @@
       reader.readAsDataURL(file);
     }
 
-    // Ana Ekranı Çiz
     async function renderApp() {
       const goals = await dbGetAll("goals");
       goals.sort((a, b) => a.createdAt - b.createdAt);
@@ -973,7 +968,6 @@
       });
     }
 
-    // Hedef Ekle / Düzenle
     async function openGoalModal(goalId = null) {
       selectedPhotoBase64 = "";
       document.getElementById("goalPhotoFile").value = "";
@@ -1054,7 +1048,6 @@
       renderApp();
     }
 
-    // İşlem (+/-) Modalı
     async function openTxModal(goalId, type) {
       const goals = await dbGetAll("goals");
       const goal = goals.find((g) => g.id === goalId);
@@ -1127,7 +1120,6 @@
       renderApp();
     }
 
-    // Log Geçmişi
     async function openGoalLogs(goalId) {
       const goals = await dbGetAll("goals");
       const goal = goals.find((g) => g.id === goalId);
@@ -1206,7 +1198,6 @@
       else openGoalLogs(targetLog.goalId);
     }
 
-    // Yedekleme & Geri Yükleme
     function openBackupModal() {
       openModal("backupModal");
     }
@@ -1244,13 +1235,18 @@
       reader.readAsText(file);
     }
 
-    // Yardımcılar
     function openModal(id) {
-      document.getElementById(id).classList.add("active");
+      const el = document.getElementById(id);
+      el.classList.add("active");
+      if (window.visualViewport) {
+        el.style.height = window.visualViewport.height + "px";
+      }
     }
 
     function closeModal(id) {
-      document.getElementById(id).classList.remove("active");
+      const el = document.getElementById(id);
+      el.classList.remove("active");
+      el.style.height = "";
     }
 
     function closeModalOnBg(e, id) {
@@ -1263,7 +1259,15 @@
       return div.innerHTML;
     }
 
-    // Başlat
+    if (window.visualViewport) {
+      window.visualViewport.addEventListener("resize", () => {
+        const activeBackdrop = document.querySelector(".modal-backdrop.active");
+        if (activeBackdrop) {
+          activeBackdrop.style.height = window.visualViewport.height + "px";
+        }
+      });
+    }
+
     initDB().then(renderApp);
   </script>
 </body>

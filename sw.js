@@ -1,4 +1,4 @@
-const CACHE_NAME = 'birikim-kokpiti-v2';
+const CACHE_NAME = 'birikim-kokpiti-v3';
 const ASSETS = [
   './',
   './index.html',
