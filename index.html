@@ -1,0 +1,1260 @@
+<!DOCTYPE html>
+<html lang="tr">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no" />
+  <meta name="theme-color" content="#0f1117" />
+  <meta name="apple-mobile-web-app-capable" content="yes" />
+  <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent" />
+  <title>Birikim Kokpiti</title>
+  <style>
+    :root {
+      --bg-main: #0e1016;
+      --bg-card: #161923;
+      --bg-elevated: #1e2230;
+      --bg-input: #12151e;
+      --border-subtle: rgba(255, 255, 255, 0.07);
+      --border-glow: rgba(16, 185, 129, 0.35);
+      --text-primary: #f3f4f6;
+      --text-secondary: #9ca3af;
+      --text-muted: #6b7280;
+      --accent-emerald: #10b981;
+      --accent-emerald-soft: rgba(16, 185, 129, 0.14);
+      --accent-gold: #f59e0b;
+      --accent-danger: #ef4444;
+      --accent-danger-soft: rgba(239, 68, 68, 0.14);
+      --radius-xl: 24px;
+      --radius-lg: 16px;
+      --radius-md: 12px;
+      --shadow-card: 0 14px 34px rgba(0, 0, 0, 0.45);
+    }
+
+    * {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+      -webkit-tap-highlight-color: transparent;
+      font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Inter, sans-serif;
+    }
+
+    body {
+      background-color: var(--bg-main);
+      color: var(--text-primary);
+      min-height: 100vh;
+      padding-bottom: 100px;
+      overflow-x: hidden;
+    }
+
+    /* Üst Bar */
+    .topbar {
+      position: sticky;
+      top: 0;
+      z-index: 20;
+      background: rgba(14, 16, 22, 0.85);
+      backdrop-filter: blur(14px);
+      -webkit-backdrop-filter: blur(14px);
+      border-bottom: 1px solid var(--border-subtle);
+      padding: 16px 20px;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+    }
+
+    .brand {
+      display: flex;
+      flex-direction: column;
+    }
+
+    .brand-title {
+      font-size: 18px;
+      font-weight: 700;
+      letter-spacing: -0.3px;
+      background: linear-gradient(135deg, #ffffff 30%, #a7f3d0 100%);
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+    }
+
+    .brand-sub {
+      font-size: 12px;
+      color: var(--text-secondary);
+      margin-top: 2px;
+    }
+
+    .top-actions {
+      display: flex;
+      gap: 8px;
+    }
+
+    .icon-btn {
+      width: 40px;
+      height: 40px;
+      border-radius: 12px;
+      background: var(--bg-card);
+      border: 1px solid var(--border-subtle);
+      color: var(--text-primary);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      cursor: pointer;
+      transition: transform 0.15s ease, background 0.2s ease;
+    }
+
+    .icon-btn:active {
+      transform: scale(0.93);
+      background: var(--bg-elevated);
+    }
+
+    /* Özet Kartı */
+    .summary-strip {
+      margin: 16px 16px 8px;
+      padding: 16px 20px;
+      background: linear-gradient(145deg, #171b26 0%, #131620 100%);
+      border: 1px solid var(--border-subtle);
+      border-radius: var(--radius-lg);
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+    }
+
+    .summary-label {
+      font-size: 12px;
+      color: var(--text-secondary);
+      text-transform: uppercase;
+      letter-spacing: 0.6px;
+    }
+
+    .summary-amount {
+      font-size: 22px;
+      font-weight: 700;
+      color: #fff;
+      margin-top: 4px;
+      font-variant-numeric: tabular-nums;
+    }
+
+    .summary-badge {
+      background: var(--accent-emerald-soft);
+      color: var(--accent-emerald);
+      border: 1px solid rgba(16, 185, 129, 0.25);
+      padding: 6px 12px;
+      border-radius: 99px;
+      font-size: 12px;
+      font-weight: 600;
+    }
+
+    /* Hedef Kartları */
+    .goals-container {
+      padding: 10px 16px;
+      display: flex;
+      flex-direction: column;
+      gap: 18px;
+    }
+
+    .goal-card {
+      background: var(--bg-card);
+      border: 1px solid var(--border-subtle);
+      border-radius: var(--radius-xl);
+      padding: 20px 16px 22px;
+      box-shadow: var(--shadow-card);
+      position: relative;
+      transition: border-color 0.3s ease;
+    }
+
+    .goal-card.completed {
+      border-color: rgba(245, 158, 11, 0.45);
+    }
+
+    .card-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-bottom: 8px;
+      padding: 0 4px;
+    }
+
+    .goal-title {
+      font-size: 17px;
+      font-weight: 700;
+      color: var(--text-primary);
+      letter-spacing: -0.2px;
+    }
+
+    .card-menu {
+      display: flex;
+      gap: 6px;
+    }
+
+    .mini-btn {
+      background: rgba(255, 255, 255, 0.04);
+      border: 1px solid var(--border-subtle);
+      color: var(--text-secondary);
+      width: 32px;
+      height: 32px;
+      border-radius: 10px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      cursor: pointer;
+    }
+
+    .mini-btn:active {
+      background: rgba(255, 255, 255, 0.1);
+      color: #fff;
+    }
+
+    /* Papara Tarzı Yarım Daire Gösterge Alanı */
+    .gauge-stage {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      margin: 6px 0 10px;
+      position: relative;
+    }
+
+    .action-circle {
+      width: 48px;
+      height: 48px;
+      border-radius: 50%;
+      border: 1px solid var(--border-subtle);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 24px;
+      font-weight: 500;
+      cursor: pointer;
+      flex-shrink: 0;
+      transition: all 0.15s ease;
+      z-index: 3;
+    }
+
+    .action-circle.minus {
+      background: var(--accent-danger-soft);
+      color: #fca5a5;
+      border-color: rgba(239, 68, 68, 0.25);
+    }
+
+    .action-circle.minus:active {
+      transform: scale(0.9);
+      background: rgba(239, 68, 68, 0.28);
+    }
+
+    .action-circle.plus {
+      background: var(--accent-emerald-soft);
+      color: #6ee7b7;
+      border-color: rgba(16, 185, 129, 0.3);
+      box-shadow: 0 0 20px rgba(16, 185, 129, 0.12);
+    }
+
+    .action-circle.plus:active {
+      transform: scale(0.9);
+      background: rgba(16, 185, 129, 0.3);
+    }
+
+    .arc-wrapper {
+      position: relative;
+      width: 220px;
+      height: 132px;
+      display: flex;
+      justify-content: center;
+      align-items: flex-end;
+      flex-shrink: 0;
+    }
+
+    .arc-svg {
+      position: absolute;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      overflow: visible;
+    }
+
+    .arc-bg {
+      fill: none;
+      stroke: #232838;
+      stroke-width: 13;
+      stroke-linecap: round;
+    }
+
+    .arc-fill {
+      fill: none;
+      stroke-width: 13;
+      stroke-linecap: round;
+      transition: stroke-dashoffset 0.7s cubic-bezier(0.22, 1, 0.36, 1);
+    }
+
+    /* Merkez Fotoğraf */
+    .photo-hub {
+      width: 92px;
+      height: 92px;
+      border-radius: 50%;
+      background: var(--bg-elevated);
+      border: 3px solid #262b3d;
+      box-shadow: 0 8px 20px rgba(0, 0, 0, 0.5);
+      overflow: hidden;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      margin-bottom: 4px;
+      z-index: 2;
+      position: relative;
+    }
+
+    .photo-hub img {
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+    }
+
+    .photo-placeholder {
+      color: var(--text-muted);
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      font-size: 11px;
+      gap: 4px;
+    }
+
+    /* Alt Fiyat Bilgisi */
+    .price-footer {
+      text-align: center;
+      margin-top: 6px;
+    }
+
+    .amount-row {
+      display: flex;
+      justify-content: center;
+      align-items: baseline;
+      gap: 6px;
+      font-variant-numeric: tabular-nums;
+    }
+
+    .current-val {
+      font-size: 20px;
+      font-weight: 800;
+      color: #ffffff;
+    }
+
+    .target-val {
+      font-size: 14px;
+      font-weight: 500;
+      color: var(--text-secondary);
+    }
+
+    .percent-pill {
+      display: inline-block;
+      margin-top: 6px;
+      font-size: 12px;
+      font-weight: 700;
+      color: var(--accent-emerald);
+      background: rgba(16, 185, 129, 0.1);
+      padding: 3px 10px;
+      border-radius: 99px;
+    }
+
+    .goal-card.completed .percent-pill {
+      color: var(--accent-gold);
+      background: rgba(245, 158, 11, 0.15);
+    }
+
+    /* Boş Durum */
+    .empty-state {
+      text-align: center;
+      padding: 60px 24px;
+      color: var(--text-secondary);
+    }
+
+    .empty-state p {
+      font-size: 14px;
+      margin-top: 8px;
+      line-height: 1.5;
+    }
+
+    /* Yüzen Yeni Hedef Butonu */
+    .fab-add {
+      position: fixed;
+      bottom: 22px;
+      left: 50%;
+      transform: translateX(-50%);
+      background: linear-gradient(135deg, #10b981 0%, #059669 100%);
+      color: #062419;
+      font-weight: 700;
+      font-size: 15px;
+      padding: 14px 26px;
+      border-radius: 99px;
+      border: none;
+      box-shadow: 0 10px 28px rgba(16, 185, 129, 0.35);
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      cursor: pointer;
+      z-index: 25;
+    }
+
+    .fab-add:active {
+      transform: translateX(-50%) scale(0.95);
+    }
+
+    /* Modallar (Bottom Sheet) */
+    .modal-backdrop {
+      position: fixed;
+      inset: 0;
+      background: rgba(0, 0, 0, 0.72);
+      backdrop-filter: blur(6px);
+      z-index: 50;
+      display: none;
+      align-items: flex-end;
+      justify-content: center;
+    }
+
+    .modal-backdrop.active {
+      display: flex;
+    }
+
+    .sheet {
+      width: 100%;
+      max-width: 480px;
+      background: #171a24;
+      border-top: 1px solid rgba(255, 255, 255, 0.1);
+      border-radius: 26px 26px 0 0;
+      padding: 20px 20px 30px;
+      animation: slideUp 0.25s ease-out;
+      max-height: 88vh;
+      overflow-y: auto;
+    }
+
+    @keyframes slideUp {
+      from { transform: translateY(100%); }
+      to { transform: translateY(0); }
+    }
+
+    .sheet-handle {
+      width: 40px;
+      height: 4px;
+      background: rgba(255, 255, 255, 0.18);
+      border-radius: 99px;
+      margin: 0 auto 16px;
+    }
+
+    .sheet-title {
+      font-size: 18px;
+      font-weight: 700;
+      margin-bottom: 16px;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+    }
+
+    .form-group {
+      margin-bottom: 14px;
+    }
+
+    .form-label {
+      display: block;
+      font-size: 12px;
+      color: var(--text-secondary);
+      margin-bottom: 6px;
+    }
+
+    .form-input {
+      width: 100%;
+      background: var(--bg-input);
+      border: 1px solid var(--border-subtle);
+      color: #fff;
+      padding: 13px 14px;
+      border-radius: var(--radius-md);
+      font-size: 16px;
+      outline: none;
+    }
+
+    .form-input:focus {
+      border-color: var(--accent-emerald);
+    }
+
+    .quick-pills {
+      display: flex;
+      gap: 8px;
+      flex-wrap: wrap;
+      margin-bottom: 14px;
+    }
+
+    .pill-btn {
+      background: var(--bg-elevated);
+      border: 1px solid var(--border-subtle);
+      color: var(--text-primary);
+      padding: 7px 12px;
+      border-radius: 99px;
+      font-size: 13px;
+      font-weight: 600;
+      cursor: pointer;
+    }
+
+    .pill-btn:active {
+      background: var(--accent-emerald-soft);
+      border-color: var(--accent-emerald);
+    }
+
+    .photo-upload-box {
+      border: 1.5px dashed rgba(255, 255, 255, 0.18);
+      border-radius: var(--radius-md);
+      padding: 14px;
+      text-align: center;
+      cursor: pointer;
+      display: flex;
+      align-items: center;
+      gap: 14px;
+      background: var(--bg-input);
+    }
+
+    .photo-preview-mini {
+      width: 54px;
+      height: 54px;
+      border-radius: 50%;
+      object-fit: cover;
+      background: var(--bg-elevated);
+      flex-shrink: 0;
+    }
+
+    .btn-primary {
+      width: 100%;
+      padding: 14px;
+      border-radius: var(--radius-md);
+      border: none;
+      background: var(--accent-emerald);
+      color: #052217;
+      font-size: 16px;
+      font-weight: 700;
+      cursor: pointer;
+      margin-top: 6px;
+    }
+
+    .btn-danger-outline {
+      width: 100%;
+      padding: 12px;
+      border-radius: var(--radius-md);
+      border: 1px solid rgba(239, 68, 68, 0.35);
+      background: rgba(239, 68, 68, 0.08);
+      color: #fca5a5;
+      font-size: 14px;
+      font-weight: 600;
+      cursor: pointer;
+      margin-top: 10px;
+    }
+
+    /* Log Listesi */
+    .log-list {
+      display: flex;
+      flex-direction: column;
+      gap: 10px;
+    }
+
+    .log-item {
+      background: var(--bg-input);
+      border: 1px solid var(--border-subtle);
+      border-radius: var(--radius-md);
+      padding: 12px 14px;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+    }
+
+    .log-left {
+      display: flex;
+      flex-direction: column;
+      gap: 3px;
+    }
+
+    .log-goal-tag {
+      font-size: 11px;
+      color: var(--accent-gold);
+      font-weight: 600;
+    }
+
+    .log-note {
+      font-size: 14px;
+      color: var(--text-primary);
+      font-weight: 500;
+    }
+
+    .log-date {
+      font-size: 11px;
+      color: var(--text-muted);
+    }
+
+    .log-right {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+    }
+
+    .log-amount {
+      font-size: 15px;
+      font-weight: 700;
+      font-variant-numeric: tabular-nums;
+    }
+
+    .log-amount.in { color: var(--accent-emerald); }
+    .log-amount.out { color: var(--accent-danger); }
+
+    .log-del {
+      background: none;
+      border: none;
+      color: var(--text-muted);
+      padding: 4px;
+      cursor: pointer;
+      font-size: 16px;
+    }
+
+    .backup-grid {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 10px;
+      margin-top: 10px;
+    }
+
+    .btn-secondary {
+      padding: 13px;
+      border-radius: var(--radius-md);
+      border: 1px solid var(--border-subtle);
+      background: var(--bg-elevated);
+      color: #fff;
+      font-size: 14px;
+      font-weight: 600;
+      cursor: pointer;
+      text-align: center;
+    }
+  </style>
+</head>
+<body>
+
+  <!-- Üst Başlık -->
+  <header class="topbar">
+    <div class="brand">
+      <span class="brand-title">BİRİKİM KOKPİTİ</span>
+      <span class="brand-sub" id="goalCountText">0 Aktif Hedef</span>
+    </div>
+    <div class="top-actions">
+      <button class="icon-btn" onclick="openGlobalLogs()" title="Tüm İşlem Geçmişi">
+        <svg width="20" height="20" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
+          <path stroke-linecap="round" stroke-linejoin="round" d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z"/>
+        </svg>
+      </button>
+      <button class="icon-btn" onclick="openBackupModal()" title="Yedekle / Geri Yükle">
+        <svg width="20" height="20" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
+          <path stroke-linecap="round" stroke-linejoin="round" d="M4 16v1a3 3 0 003 3h10a3 3 0 003-3v-1m-4-8l-4-4m0 0L8 8m4-4v12"/>
+        </svg>
+      </button>
+    </div>
+  </header>
+
+  <!-- Toplam Özet -->
+  <section class="summary-strip">
+    <div>
+      <div class="summary-label">Toplam Biriken</div>
+      <div class="summary-amount" id="totalSavedDisplay">0 ₺</div>
+    </div>
+    <div class="summary-badge" id="overallPercentBadge">%0 Genel</div>
+  </section>
+
+  <!-- Hedef Listesi -->
+  <main class="goals-container" id="goalsContainer"></main>
+
+  <!-- Yeni Hedef Ekle Butonu -->
+  <button class="fab-add" onclick="openGoalModal()">
+    <svg width="20" height="20" fill="none" stroke="currentColor" stroke-width="2.5" viewBox="0 0 24 24">
+      <path stroke-linecap="round" stroke-linejoin="round" d="M12 4v16m8-8H4"/>
+    </svg>
+    Yeni Hedef
+  </button>
+
+  <!-- Hedef Ekle / Düzenle Modal -->
+  <div class="modal-backdrop" id="goalModal" onclick="closeModalOnBg(event, 'goalModal')">
+    <div class="sheet">
+      <div class="sheet-handle"></div>
+      <div class="sheet-title">
+        <span id="goalModalTitle">Yeni Birikim Hedefi</span>
+        <button class="mini-btn" onclick="closeModal('goalModal')">✕</button>
+      </div>
+      <input type="hidden" id="editGoalId" />
+      <div class="form-group">
+        <label class="form-label">Hedef Adı</label>
+        <input type="text" class="form-input" id="goalNameInput" placeholder="Örn: 125cc Motor, Yeni Ekipman..." />
+      </div>
+      <div class="form-group">
+        <label class="form-label">Hedef Tutar (₺)</label>
+        <input type="number" inputmode="decimal" class="form-input" id="goalTargetInput" placeholder="10000" />
+      </div>
+      <div class="form-group">
+        <label class="form-label">Hedef Fotoğrafı</label>
+        <label class="photo-upload-box" for="goalPhotoFile">
+          <img id="photoPreview" class="photo-preview-mini" src="" alt="" style="display:none;" />
+          <div id="photoUploadText" style="text-align:left;">
+            <div style="font-size:14px; font-weight:600; color:#fff;">Galeriden Fotoğraf Seç</div>
+            <div style="font-size:12px; color:var(--text-secondary);">Otomatik sıkıştırılır ve cihazda saklanır</div>
+          </div>
+        </label>
+        <input type="file" id="goalPhotoFile" accept="image/*" style="display:none;" onchange="handlePhotoSelect(event)" />
+      </div>
+      <button class="btn-primary" onclick="saveGoal()">Hedefi Kaydet</button>
+      <button class="btn-danger-outline" id="deleteGoalBtn" style="display:none;" onclick="deleteCurrentGoal()">Bu Hedefi Sil</button>
+    </div>
+  </div>
+
+  <!-- Para Ekle / Çıkar Modal -->
+  <div class="modal-backdrop" id="txModal" onclick="closeModalOnBg(event, 'txModal')">
+    <div class="sheet">
+      <div class="sheet-handle"></div>
+      <div class="sheet-title">
+        <span id="txModalTitle">Birikim Ekle</span>
+        <button class="mini-btn" onclick="closeModal('txModal')">✕</button>
+      </div>
+      <input type="hidden" id="txGoalId" />
+      <input type="hidden" id="txType" />
+      
+      <div class="quick-pills" id="quickPills">
+        <button type="button" class="pill-btn" onclick="addQuickAmount(100)">+100 ₺</button>
+        <button type="button" class="pill-btn" onclick="addQuickAmount(250)">+250 ₺</button>
+        <button type="button" class="pill-btn" onclick="addQuickAmount(500)">+500 ₺</button>
+        <button type="button" class="pill-btn" onclick="addQuickAmount(1000)">+1.000 ₺</button>
+      </div>
+
+      <div class="form-group">
+        <label class="form-label">Tutar (₺)</label>
+        <input type="number" inputmode="decimal" class="form-input" id="txAmountInput" placeholder="0" style="font-size:22px; font-weight:700;" />
+      </div>
+      <div class="form-group">
+        <label class="form-label">Not (İsteğe Bağlı)</label>
+        <input type="text" class="form-input" id="txNoteInput" placeholder="Örn: Haftalık aktarım, ek gelir..." />
+      </div>
+      <button class="btn-primary" id="txSubmitBtn" onclick="submitTransaction()">Onayla</button>
+    </div>
+  </div>
+
+  <!-- Log Geçmişi Modal -->
+  <div class="modal-backdrop" id="logModal" onclick="closeModalOnBg(event, 'logModal')">
+    <div class="sheet">
+      <div class="sheet-handle"></div>
+      <div class="sheet-title">
+        <span id="logModalTitle">İşlem Geçmişi</span>
+        <button class="mini-btn" onclick="closeModal('logModal')">✕</button>
+      </div>
+      <div class="log-list" id="logListContainer"></div>
+    </div>
+  </div>
+
+  <!-- Yedekleme Modal -->
+  <div class="modal-backdrop" id="backupModal" onclick="closeModalOnBg(event, 'backupModal')">
+    <div class="sheet">
+      <div class="sheet-handle"></div>
+      <div class="sheet-title">
+        <span>Veri Yedekleme</span>
+        <button class="mini-btn" onclick="closeModal('backupModal')">✕</button>
+      </div>
+      <p style="font-size:13px; color:var(--text-secondary); line-height:1.5;">
+        Tüm hedeflerin, sıkıştırılmış fotoğrafların ve tarihli işlem kayıtların yalnızca bu cihazın yerel hafızasında tutulur. Tarayıcı verilerini sıfırlamadan önce yedek alabilirsin.
+      </p>
+      <div class="backup-grid">
+        <button class="btn-secondary" onclick="exportBackup()">⬇ Yedeği İndir</button>
+        <label class="btn-secondary" for="importFile" style="cursor:pointer;">⬆ Yedekten Yükle</label>
+        <input type="file" id="importFile" accept=".json" style="display:none;" onchange="importBackup(event)" />
+      </div>
+    </div>
+  </div>
+
+  <script>
+    const DB_NAME = "BirikimKokpitDB";
+    const DB_VERSION = 1;
+    let db;
+    let selectedPhotoBase64 = "";
+
+    // IndexedDB Başlatma
+    function initDB() {
+      return new Promise((resolve, reject) => {
+        const req = indexedDB.open(DB_NAME, DB_VERSION);
+        req.onupgradeneeded = (e) => {
+          const database = e.target.result;
+          if (!database.objectStoreNames.contains("goals")) {
+            database.createObjectStore("goals", { keyPath: "id" });
+          }
+          if (!database.objectStoreNames.contains("logs")) {
+            const logStore = database.createObjectStore("logs", { keyPath: "id" });
+            logStore.createIndex("goalId", "goalId", { unique: false });
+          }
+        };
+        req.onsuccess = (e) => {
+          db = e.target.result;
+          resolve(db);
+        };
+        req.onerror = (e) => reject(e.target.error);
+      });
+    }
+
+    function dbGetAll(storeName) {
+      return new Promise((resolve, reject) => {
+        const tx = db.transaction(storeName, "readonly");
+        const req = tx.objectStore(storeName).getAll();
+        req.onsuccess = () => resolve(req.result);
+        req.onerror = () => reject(req.error);
+      });
+    }
+
+    function dbPut(storeName, data) {
+      return new Promise((resolve, reject) => {
+        const tx = db.transaction(storeName, "readwrite");
+        const req = tx.objectStore(storeName).put(data);
+        req.onsuccess = () => resolve();
+        req.onerror = () => reject(req.error);
+      });
+    }
+
+    function dbDelete(storeName, id) {
+      return new Promise((resolve, reject) => {
+        const tx = db.transaction(storeName, "readwrite");
+        const req = tx.objectStore(storeName).delete(id);
+        req.onsuccess = () => resolve();
+        req.onerror = () => reject(req.error);
+      });
+    }
+
+    // Para Formatı
+    function formatTL(num) {
+      return new Intl.NumberFormat("tr-TR", {
+        minimumFractionDigits: num % 1 === 0 ? 0 : 2,
+        maximumFractionDigits: 2
+      }).format(num) + " ₺";
+    }
+
+    // Fotoğraf Sıkıştırma (Hafıza dostu)
+    function handlePhotoSelect(event) {
+      const file = event.target.files[0];
+      if (!file) return;
+      const reader = new FileReader();
+      reader.onload = (e) => {
+        const img = new Image();
+        img.onload = () => {
+          const canvas = document.createElement("canvas");
+          const maxSize = 280;
+          let w = img.width;
+          let h = img.height;
+          if (w > h) {
+            if (w > maxSize) { h *= maxSize / w; w = maxSize; }
+          } else {
+            if (h > maxSize) { w *= maxSize / h; h = maxSize; }
+          }
+          canvas.width = w;
+          canvas.height = h;
+          const ctx = canvas.getContext("2d");
+          ctx.drawImage(img, 0, 0, w, h);
+          selectedPhotoBase64 = canvas.toDataURL("image/jpeg", 0.82);
+
+          const preview = document.getElementById("photoPreview");
+          preview.src = selectedPhotoBase64;
+          preview.style.display = "block";
+        };
+        img.src = e.target.result;
+      };
+      reader.readAsDataURL(file);
+    }
+
+    // Ana Ekranı Çiz
+    async function renderApp() {
+      const goals = await dbGetAll("goals");
+      goals.sort((a, b) => a.createdAt - b.createdAt);
+
+      const container = document.getElementById("goalsContainer");
+      container.innerHTML = "";
+
+      let totalSaved = 0;
+      let totalTarget = 0;
+
+      goals.forEach((g) => {
+        totalSaved += g.current;
+        totalTarget += g.target;
+      });
+
+      document.getElementById("goalCountText").textContent = `${goals.length} Aktif Hedef`;
+      document.getElementById("totalSavedDisplay").textContent = formatTL(totalSaved);
+      const overallPct = totalTarget > 0 ? Math.min(100, Math.round((totalSaved / totalTarget) * 100)) : 0;
+      document.getElementById("overallPercentBadge").textContent = `%${overallPct} Genel`;
+
+      if (goals.length === 0) {
+        container.innerHTML = `
+          <div class="empty-state">
+            <div style="font-size:40px;">🎯</div>
+            <h3 style="color:#fff; margin-top:10px;">Henüz bir hedefin yok</h3>
+            <p>Aşağıdaki <b>+ Yeni Hedef</b> butonuna dokunarak fotoğrafını ve hedef tutarını ekleyip birikime başlayabilirsin.</p>
+          </div>
+        `;
+        return;
+      }
+
+      // Yarım daire yay uzunluğu (r=92 -> pi * 92 ≈ 289)
+      const arcLength = 289;
+
+      goals.forEach((goal) => {
+        const rawPct = goal.target > 0 ? (goal.current / goal.target) * 100 : 0;
+        const clampedPct = Math.max(0, Math.min(100, rawPct));
+        const offset = arcLength - (arcLength * clampedPct) / 100;
+        const isDone = clampedPct >= 100;
+        const gradId = `grad_${goal.id}`;
+
+        const card = document.createElement("div");
+        card.className = `goal-card ${isDone ? "completed" : ""}`;
+        card.innerHTML = `
+          <div class="card-header">
+            <div class="goal-title">${escapeHtml(goal.name)}</div>
+            <div class="card-menu">
+              <button class="mini-btn" onclick="openGoalLogs('${goal.id}')" title="Hedef Geçmişi">
+                <svg width="16" height="16" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
+                  <path stroke-linecap="round" stroke-linejoin="round" d="M9 5H7a2 2 0 00-2 2v12a2 2 0 002 2h10a2 2 0 002-2V7a2 2 0 00-2-2h-2M9 5a2 2 0 002 2h2a2 2 0 002-2M9 5a2 2 0 012-2h2a2 2 0 012 2"/>
+                </svg>
+              </button>
+              <button class="mini-btn" onclick="openGoalModal('${goal.id}')" title="Düzenle">
+                <svg width="15" height="15" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
+                  <path stroke-linecap="round" stroke-linejoin="round" d="M15.232 5.232l3.536 3.536m-2.036-5.036a2.5 2.5 0 113.536 3.536L6.5 21.036H3v-3.572L16.732 3.732z"/>
+                </svg>
+              </button>
+            </div>
+          </div>
+
+          <div class="gauge-stage">
+            <button class="action-circle minus" onclick="openTxModal('${goal.id}', 'out')">−</button>
+
+            <div class="arc-wrapper">
+              <svg class="arc-svg" viewBox="0 0 220 132">
+                <defs>
+                  <linearGradient id="${gradId}" x1="0%" y1="0%" x2="100%" y2="0%">
+                    <stop offset="0%" stop-color="#10b981" />
+                    <stop offset="100%" stop-color="${isDone ? '#f59e0b' : '#34d399'}" />
+                  </linearGradient>
+                </defs>
+                <path class="arc-bg" d="M 18 118 A 92 92 0 0 1 202 118" />
+                <path class="arc-fill"
+                      stroke="url(#${gradId})"
+                      stroke-dasharray="${arcLength}"
+                      stroke-dashoffset="${offset}"
+                      d="M 18 118 A 92 92 0 0 1 202 118" />
+              </svg>
+
+              <div class="photo-hub">
+                ${
+                  goal.photo
+                    ? `<img src="${goal.photo}" alt="${escapeHtml(goal.name)}" />`
+                    : `<div class="photo-placeholder">
+                        <svg width="24" height="24" fill="none" stroke="currentColor" stroke-width="1.8" viewBox="0 0 24 24">
+                          <path stroke-linecap="round" stroke-linejoin="round" d="M4 16l4.586-4.586a2 2 0 012.828 0L16 16m-2-2l1.586-1.586a2 2 0 012.828 0L20 14m-6-6h.01M6 20h12a2 2 0 002-2V6a2 2 0 00-2-2H6a2 2 0 00-2 2v12a2 2 0 002 2z"/>
+                        </svg>
+                      </div>`
+                }
+              </div>
+            </div>
+
+            <button class="action-circle plus" onclick="openTxModal('${goal.id}', 'in')">+</button>
+          </div>
+
+          <div class="price-footer">
+            <div class="amount-row">
+              <span class="current-val">${formatTL(goal.current)}</span>
+              <span class="target-val">/ ${formatTL(goal.target)}</span>
+            </div>
+            <div class="percent-pill">%${rawPct.toFixed(1).replace('.0', '')} Tamamlandı</div>
+          </div>
+        `;
+        container.appendChild(card);
+      });
+    }
+
+    // Hedef Ekle / Düzenle
+    async function openGoalModal(goalId = null) {
+      selectedPhotoBase64 = "";
+      document.getElementById("goalPhotoFile").value = "";
+      const preview = document.getElementById("photoPreview");
+      preview.style.display = "none";
+
+      if (goalId) {
+        const goals = await dbGetAll("goals");
+        const g = goals.find((item) => item.id === goalId);
+        if (!g) return;
+        document.getElementById("goalModalTitle").textContent = "Hedefi Düzenle";
+        document.getElementById("editGoalId").value = g.id;
+        document.getElementById("goalNameInput").value = g.name;
+        document.getElementById("goalTargetInput").value = g.target;
+        document.getElementById("deleteGoalBtn").style.display = "block";
+        if (g.photo) {
+          selectedPhotoBase64 = g.photo;
+          preview.src = g.photo;
+          preview.style.display = "block";
+        }
+      } else {
+        document.getElementById("goalModalTitle").textContent = "Yeni Birikim Hedefi";
+        document.getElementById("editGoalId").value = "";
+        document.getElementById("goalNameInput").value = "";
+        document.getElementById("goalTargetInput").value = "";
+        document.getElementById("deleteGoalBtn").style.display = "none";
+      }
+
+      openModal("goalModal");
+    }
+
+    async function saveGoal() {
+      const id = document.getElementById("editGoalId").value;
+      const name = document.getElementById("goalNameInput").value.trim();
+      const target = parseFloat(document.getElementById("goalTargetInput").value);
+
+      if (!name || isNaN(target) || target <= 0) {
+        alert("Lütfen geçerli bir hedef adı ve tutar gir.");
+        return;
+      }
+
+      if (id) {
+        const goals = await dbGetAll("goals");
+        const existing = goals.find((g) => g.id === id);
+        existing.name = name;
+        existing.target = target;
+        existing.photo = selectedPhotoBase64;
+        await dbPut("goals", existing);
+      } else {
+        const newGoal = {
+          id: "g_" + Date.now(),
+          name,
+          target,
+          current: 0,
+          photo: selectedPhotoBase64,
+          createdAt: Date.now()
+        };
+        await dbPut("goals", newGoal);
+      }
+
+      closeModal("goalModal");
+      renderApp();
+    }
+
+    async function deleteCurrentGoal() {
+      const id = document.getElementById("editGoalId").value;
+      if (!id) return;
+      if (!confirm("Bu hedefi ve geçmiş kayıtlarını silmek istediğine emin misin?")) return;
+
+      await dbDelete("goals", id);
+      const logs = await dbGetAll("logs");
+      for (const l of logs) {
+        if (l.goalId === id) {
+          await dbDelete("logs", l.id);
+        }
+      }
+      closeModal("goalModal");
+      renderApp();
+    }
+
+    // İşlem (+/-) Modalı
+    async function openTxModal(goalId, type) {
+      const goals = await dbGetAll("goals");
+      const goal = goals.find((g) => g.id === goalId);
+      if (!goal) return;
+
+      document.getElementById("txGoalId").value = goalId;
+      document.getElementById("txType").value = type;
+      document.getElementById("txAmountInput").value = "";
+      document.getElementById("txNoteInput").value = "";
+
+      const isPlus = type === "in";
+      document.getElementById("txModalTitle").textContent = `${goal.name} • ${isPlus ? "Para Ekle (+)" : "Para Çıkar (−)"}`;
+
+      const submitBtn = document.getElementById("txSubmitBtn");
+      submitBtn.textContent = isPlus ? "+ Birikime Ekle" : "− Birikimden Düş";
+      submitBtn.style.background = isPlus ? "var(--accent-emerald)" : "var(--accent-danger)";
+      submitBtn.style.color = isPlus ? "#052217" : "#ffffff";
+
+      const pills = document.getElementById("quickPills");
+      const sign = isPlus ? "+" : "−";
+      pills.innerHTML = [100, 250, 500, 1000]
+        .map((val) => `<button type="button" class="pill-btn" onclick="addQuickAmount(${val})">${sign}${val} ₺</button>`)
+        .join("");
+
+      openModal("txModal");
+      setTimeout(() => document.getElementById("txAmountInput").focus(), 150);
+    }
+
+    function addQuickAmount(val) {
+      const input = document.getElementById("txAmountInput");
+      const current = parseFloat(input.value) || 0;
+      input.value = current + val;
+    }
+
+    async function submitTransaction() {
+      const goalId = document.getElementById("txGoalId").value;
+      const type = document.getElementById("txType").value;
+      const amount = parseFloat(document.getElementById("txAmountInput").value);
+      const note = document.getElementById("txNoteInput").value.trim();
+
+      if (isNaN(amount) || amount <= 0) {
+        alert("Geçerli bir tutar girmelisin.");
+        return;
+      }
+
+      const goals = await dbGetAll("goals");
+      const goal = goals.find((g) => g.id === goalId);
+      if (!goal) return;
+
+      if (type === "in") {
+        goal.current += amount;
+      } else {
+        goal.current = Math.max(0, goal.current - amount);
+      }
+
+      await dbPut("goals", goal);
+
+      const logEntry = {
+        id: "l_" + Date.now(),
+        goalId: goal.id,
+        goalName: goal.name,
+        type,
+        amount,
+        note: note || (type === "in" ? "Birikim eklendi" : "Birikimden çekildi"),
+        timestamp: Date.now()
+      };
+
+      await dbPut("logs", logEntry);
+      closeModal("txModal");
+      renderApp();
+    }
+
+    // Log Geçmişi
+    async function openGoalLogs(goalId) {
+      const goals = await dbGetAll("goals");
+      const goal = goals.find((g) => g.id === goalId);
+      const logs = await dbGetAll("logs");
+      const filtered = logs.filter((l) => l.goalId === goalId).sort((a, b) => b.timestamp - a.timestamp);
+
+      document.getElementById("logModalTitle").textContent = `${goal ? goal.name : "Hedef"} • Geçmiş`;
+      renderLogList(filtered, false);
+      openModal("logModal");
+    }
+
+    async function openGlobalLogs() {
+      const logs = await dbGetAll("logs");
+      logs.sort((a, b) => b.timestamp - a.timestamp);
+      document.getElementById("logModalTitle").textContent = "Tüm Hareket Dökümü";
+      renderLogList(logs, true);
+      openModal("logModal");
+    }
+
+    function renderLogList(logs, showGoalBadge) {
+      const container = document.getElementById("logListContainer");
+      if (logs.length === 0) {
+        container.innerHTML = `<div style="text-align:center; padding:30px; color:var(--text-muted); font-size:14px;">Henüz kayıtlı işlem bulunmuyor.</div>`;
+        return;
+      }
+
+      container.innerHTML = logs
+        .map((log) => {
+          const dateStr = new Date(log.timestamp).toLocaleString("tr-TR", {
+            day: "2-digit",
+            month: "short",
+            year: "numeric",
+            hour: "2-digit",
+            minute: "2-digit"
+          });
+          const isIn = log.type === "in";
+          return `
+            <div class="log-item">
+              <div class="log-left">
+                ${showGoalBadge ? `<span class="log-goal-tag">${escapeHtml(log.goalName)}</span>` : ""}
+                <span class="log-note">${escapeHtml(log.note)}</span>
+                <span class="log-date">${dateStr}</span>
+              </div>
+              <div class="log-right">
+                <span class="log-amount ${isIn ? "in" : "out"}">${isIn ? "+" : "−"}${formatTL(log.amount)}</span>
+                <button class="log-del" onclick="deleteLogEntry('${log.id}', ${showGoalBadge})" title="İşlemi Geri Al">🗑</button>
+              </div>
+            </div>
+          `;
+        })
+        .join("");
+    }
+
+    async function deleteLogEntry(logId, isGlobal) {
+      if (!confirm("Bu işlemi silip bakiyeyi geri almak istiyor musun?")) return;
+
+      const logs = await dbGetAll("logs");
+      const targetLog = logs.find((l) => l.id === logId);
+      if (!targetLog) return;
+
+      const goals = await dbGetAll("goals");
+      const goal = goals.find((g) => g.id === targetLog.goalId);
+      if (goal) {
+        if (targetLog.type === "in") {
+          goal.current = Math.max(0, goal.current - targetLog.amount);
+        } else {
+          goal.current += targetLog.amount;
+        }
+        await dbPut("goals", goal);
+      }
+
+      await dbDelete("logs", logId);
+      await renderApp();
+
+      if (isGlobal) openGlobalLogs();
+      else openGoalLogs(targetLog.goalId);
+    }
+
+    // Yedekleme & Geri Yükleme
+    function openBackupModal() {
+      openModal("backupModal");
+    }
+
+    async function exportBackup() {
+      const goals = await dbGetAll("goals");
+      const logs = await dbGetAll("logs");
+      const payload = { version: 1, exportedAt: new Date().toISOString(), goals, logs };
+      const blob = new Blob([JSON.stringify(payload)], { type: "application/json" });
+      const url = URL.createObjectURL(blob);
+      const a = document.createElement("a");
+      a.href = url;
+      a.download = `birikim_yedek_${new Date().toISOString().slice(0, 10)}.json`;
+      a.click();
+      URL.revokeObjectURL(url);
+    }
+
+    function importBackup(event) {
+      const file = event.target.files[0];
+      if (!file) return;
+      const reader = new FileReader();
+      reader.onload = async (e) => {
+        try {
+          const data = JSON.parse(e.target.result);
+          if (!Array.isArray(data.goals) || !Array.isArray(data.logs)) throw new Error("Geçersiz dosya");
+          for (const g of data.goals) await dbPut("goals", g);
+          for (const l of data.logs) await dbPut("logs", l);
+          closeModal("backupModal");
+          renderApp();
+          alert("Yedek başarıyla geri yüklendi!");
+        } catch (err) {
+          alert("Yedek dosyası okunamadı.");
+        }
+      };
+      reader.readAsText(file);
+    }
+
+    // Yardımcılar
+    function openModal(id) {
+      document.getElementById(id).classList.add("active");
+    }
+
+    function closeModal(id) {
+      document.getElementById(id).classList.remove("active");
+    }
+
+    function closeModalOnBg(e, id) {
+      if (e.target.id === id) closeModal(id);
+    }
+
+    function escapeHtml(text) {
+      const div = document.createElement("div");
+      div.textContent = text;
+      return div.innerHTML;
+    }
+
+    // Başlat
+    initDB().then(renderApp);
+  </script>
+</body>
+</html>
